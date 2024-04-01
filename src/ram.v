@@ -1,7 +1,7 @@
 module GoofyRam (
 	input clk,
 
-	input sam_save,
+	input ram_save,
 	input [7:0] ram_in,
 	output [7:0] ram_out,
 
@@ -11,17 +11,15 @@ module GoofyRam (
 
 	assign ram_out = memory[ram_addr];
 
-	always @(negedge clk) begin
-		if (sam_save) begin
+	always @(posedge clk) begin
+		if (ram_save) begin
 			memory[ram_addr] <= ram_in;
 		end
 	end
 
 	initial begin
-`ifdef FIRMWARE
-		$readmemh(`FIRMWARE, memory);
-`else
-        // $readmemh("test/fib2.hex", memory);
-`endif
+		`ifdef RAM
+				$readmemh(`RAM, memory);
+		`endif
     end
 endmodule

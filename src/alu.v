@@ -2,11 +2,11 @@ module GoofyALU (
     input clk,
     input res,
 
-    input ali0w,
+    input alu0w,
     output [7:0] alu0o,
     input [7:0] alu0d,
 
-    input ali1w,
+    input alu1w,
     output [7:0] alu1o,
     input [7:0] alu1d,
 
@@ -14,7 +14,7 @@ module GoofyALU (
     output alu_flag_eq_o,
     output alu_flag_hlt_o, 
 
-    output [7:0] alu_out,
+    output reg [7:0] alu_out,
 
     input alu_add,
     input alu_add_ov,
@@ -27,25 +27,37 @@ module GoofyALU (
     input alu_hlt,
     input alu_flag_res
 );
-    reg [7:0] alu0;
-    reg [7:0] alu1;
-    reg [8:0] alu_temp;
+    reg [7:0] alu0 = 0;
+    reg [7:0] alu1  = 0;
+    reg [8:0] alu_temp  = 0;
 
-    reg alu_flag_ov;
-    reg alu_flag_eq;
-    reg alu_flag_hlt;
+    reg alu_flag_ov  = 0;
+    reg alu_flag_eq  = 0;
+    reg alu_flag_hlt = 0;
 
+    assign alu0o = alu0;
+    assign alu1o = alu1;
 
-    always @(posedge clk) begin
-        if (ali0w) begin
+    assign alu_flag_ov_o  = alu_flag_ov;
+    assign alu_flag_eq_o  = alu_flag_eq;
+    assign alu_flag_hlt_o = alu_flag_hlt;
+
+    initial begin
+        alu0 = 0;
+        alu1 = 0;
+        alu_temp = 0;
+        alu_flag_ov = 0;
+        alu_flag_eq = 0;
+        alu_flag_hlt = 0;
+    end
+
+    always @(negedge clk) begin
+        if (alu0w) begin
             alu0 <= alu0d;
         end
-        if (ali1w) begin
+        if (alu1w) begin
             alu1 <= alu1d;
         end
-
-        alu0o <= alu0;
-        alu1o <= alu1;
 
         if (alu_add) begin
             // will perform an 8 bit add and set the overflow flag if the result is greater than 255
@@ -62,7 +74,6 @@ module GoofyALU (
                 alu_flag_ov <= 1;
             end
             alu_out <= alu_temp[7:0];
-        end
         end
         if (alu_sub) begin
             // will perform an 8 bit sub and set the overflow flag if the result is less than 0
