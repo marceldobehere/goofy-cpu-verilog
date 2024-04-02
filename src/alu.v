@@ -51,65 +51,75 @@ module GoofyALU (
         alu_flag_hlt = 0;
     end
 
-    always @(negedge clk) begin
+    always @(posedge clk) begin
         if (alu0w) begin
             alu0 <= alu0d;
+            $display("ALU> Setting alu0 to %h", alu0d);
         end
         if (alu1w) begin
             alu1 <= alu1d;
+            $display("ALU> Setting alu1 to %h", alu1d);
         end
+    end
 
+    always @(negedge clk) begin
         if (alu_add) begin
             // will perform an 8 bit add and set the overflow flag if the result is greater than 255
-            alu_temp <= alu0 + alu1;
-            if (alu_temp > 255) begin
+            if (alu0 + alu1 > 255) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu_temp[7:0];
+            alu_out <= alu0 + alu1;
+            $display("ALU> Performing add %h + %h = %h", alu0, alu1, alu0 + alu1);
         end
         if (alu_add_ov) begin
             // will perform an 8 bit add and add 1 to the result if the overflow flag is set and set the overflow flag if the result is greater than 255
-            alu_temp <= alu0 + alu1 + alu_flag_ov;
-            if (alu_temp > 255) begin
+            if (alu0 + alu1 + alu_flag_ov > 255) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu_temp[7:0];
+            alu_out <= alu0 + alu1 + alu_flag_ov;
+            $display("ALU> Performing add_ov %h + %h = %h", alu0, alu1, alu0 + alu1 + alu_flag_ov);
         end
         if (alu_sub) begin
             // will perform an 8 bit sub and set the overflow flag if the result is less than 0
-            alu_temp <= alu0 - alu1;
-            if (alu_temp < 0) begin
+            if (alu0 - alu1 < 0) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu_temp[7:0];
+            alu_out <= alu0 - alu1;
+            $display("ALU> Performing sub %h - %h = %h", alu0, alu1, alu0 - alu1);
         end
         if (alu_sub_ov) begin
             // will perform an 8 bit sub and subtract 1 from the result if the overflow flag is set and set the overflow flag if the result is less than 0
-            alu_temp <= alu0 - alu1 - alu_flag_ov;
-            if (alu_temp < 0) begin
+            if (alu0 - alu1 - alu_flag_ov < 0) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu_temp[7:0];
+            alu_out <= alu0 - alu1 - alu_flag_ov;
+            $display("ALU> Performing sub_ov %h - %h = %h", alu0, alu1, alu0 - alu1 - alu_flag_ov);
         end
         if (alu_and) begin
             alu_out <= alu0 & alu1;
+            $display("ALU> Performing and %h & %h = %h", alu0, alu1, alu0 & alu1);
         end
         if (alu_or) begin
             alu_out <= alu0 | alu1;
+            $display("ALU> Performing or %h | %h = %h", alu0, alu1, alu0 | alu1);
         end
         if (alu_not) begin
             alu_out <= ~alu0;
+            $display("ALU> Performing not ~%h = %h", alu0, ~alu0);
         end
         if (alu_cmp) begin
             alu_flag_eq <= alu0 == alu1;
+            $display("ALU> Performing cmp %h == %h = %h", alu0, alu1, alu0 == alu1);
         end
         if (alu_hlt) begin
             alu_flag_hlt <= 1;
+            $display("ALU> Performing hlt");
         end
         if (alu_flag_res) begin
             alu_flag_ov <= 0;
             alu_flag_eq <= 0;
             alu_flag_hlt <= 0;
+            $display("ALU> Resetting flags");
         end
     end
 
