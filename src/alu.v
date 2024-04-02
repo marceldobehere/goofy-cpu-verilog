@@ -14,7 +14,7 @@ module GoofyALU (
     output alu_flag_eq_o,
     output alu_flag_hlt_o, 
 
-    output reg [7:0] alu_out,
+    output [7:0] alu_out,
 
     input alu_add,
     input alu_add_ov,
@@ -62,13 +62,23 @@ module GoofyALU (
         end
     end
 
+    assign alu_out = (
+        (alu_add * (alu0 + alu1)) |
+        (alu_add_ov * (alu0 + alu1 + alu_flag_ov)) |
+        (alu_sub * (alu0 - alu1)) |
+        (alu_sub_ov * (alu0 - alu1 - alu_flag_ov)) |
+        (alu_and * (alu0 & alu1)) |
+        (alu_or * (alu0 | alu1)) |
+        (alu_not * (~alu0))
+    );
+
     always @(negedge clk) begin
         if (alu_add) begin
             // will perform an 8 bit add and set the overflow flag if the result is greater than 255
             if (alu0 + alu1 > 255) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu0 + alu1;
+            //alu_out <= alu0 + alu1;
             $display("ALU> Performing add %h + %h = %h", alu0, alu1, alu0 + alu1);
         end
         if (alu_add_ov) begin
@@ -76,7 +86,7 @@ module GoofyALU (
             if (alu0 + alu1 + alu_flag_ov > 255) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu0 + alu1 + alu_flag_ov;
+            //alu_out <= alu0 + alu1 + alu_flag_ov;
             $display("ALU> Performing add_ov %h + %h = %h", alu0, alu1, alu0 + alu1 + alu_flag_ov);
         end
         if (alu_sub) begin
@@ -84,7 +94,7 @@ module GoofyALU (
             if (alu0 - alu1 < 0) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu0 - alu1;
+            //alu_out <= alu0 - alu1;
             $display("ALU> Performing sub %h - %h = %h", alu0, alu1, alu0 - alu1);
         end
         if (alu_sub_ov) begin
@@ -92,19 +102,19 @@ module GoofyALU (
             if (alu0 - alu1 - alu_flag_ov < 0) begin
                 alu_flag_ov <= 1;
             end
-            alu_out <= alu0 - alu1 - alu_flag_ov;
+            //alu_out <= alu0 - alu1 - alu_flag_ov;
             $display("ALU> Performing sub_ov %h - %h = %h", alu0, alu1, alu0 - alu1 - alu_flag_ov);
         end
         if (alu_and) begin
-            alu_out <= alu0 & alu1;
+            //alu_out <= alu0 & alu1;
             $display("ALU> Performing and %h & %h = %h", alu0, alu1, alu0 & alu1);
         end
         if (alu_or) begin
-            alu_out <= alu0 | alu1;
+            //alu_out <= alu0 | alu1;
             $display("ALU> Performing or %h | %h = %h", alu0, alu1, alu0 | alu1);
         end
         if (alu_not) begin
-            alu_out <= ~alu0;
+            //alu_out <= ~alu0;
             $display("ALU> Performing not ~%h = %h", alu0, ~alu0);
         end
         if (alu_cmp) begin

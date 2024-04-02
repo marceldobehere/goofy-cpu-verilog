@@ -33,13 +33,13 @@ module GoofyCore (
     wire mc_str_reg_iop0_lo_bus = mc_out[2] && (state == STATE_EXEC); // Done
     wire mc_str_reg_iop0_hi_bus = mc_out[3] && (state == STATE_EXEC); // Done
 
-    wire mc_put_val_iop0_bus = mc_out[4] && (state == STATE_EXEC);
-    wire mc_put_val_iop1_bus = mc_out[5] && (state == STATE_EXEC);
+    wire mc_put_val_iop0_bus = mc_out[4] && (state == STATE_EXEC); // Done
+    wire mc_put_val_iop1_bus = mc_out[5] && (state == STATE_EXEC); // Done
 
-    wire mc_str_reg_0_bus = mc_out[6] && (state == STATE_EXEC);
-    wire mc_str_reg_1_bus = mc_out[7] && (state == STATE_EXEC);
-    wire mc_str_reg_2_bus = mc_out[8] && (state == STATE_EXEC);
-    wire mc_str_reg_3_bus = mc_out[9] && (state == STATE_EXEC);
+    wire mc_str_reg_0_bus = mc_out[6] && (state == STATE_EXEC); // Done
+    wire mc_str_reg_1_bus = mc_out[7] && (state == STATE_EXEC); // Done
+    wire mc_str_reg_2_bus = mc_out[8] && (state == STATE_EXEC); // Done
+    wire mc_str_reg_3_bus = mc_out[9] && (state == STATE_EXEC); // Done
 
     wire mc_ram_write_bus_a = mc_out[10] && (state == STATE_EXEC);
     wire mc_ram_write_bus_b = mc_out[11] && (state == STATE_EXEC);
@@ -56,21 +56,22 @@ module GoofyCore (
     wire mc_str_alu_reg_0_bus = mc_out[18] && (state == STATE_EXEC); // Done
     wire mc_str_alu_reg_1_bus = mc_out[19] && (state == STATE_EXEC); // Done
 
-    wire mc_alu_add = mc_out[20] && (state == STATE_EXEC);
-    wire mc_alu_add_ov = mc_out[21] && (state == STATE_EXEC);
-    wire mc_alu_sub = mc_out[22] && (state == STATE_EXEC);
-    wire mc_alu_sub_ov = mc_out[23] && (state == STATE_EXEC);
-    wire mc_alu_and = mc_out[24] && (state == STATE_EXEC);
-    wire mc_alu_or = mc_out[25] && (state == STATE_EXEC);
-    wire mc_alu_not = mc_out[26] && (state == STATE_EXEC);
-    wire mc_alu_cmp = mc_out[27] && (state == STATE_EXEC);
-    wire mc_alu_flag_reset = mc_out[28] && (state == STATE_EXEC);
-    wire mc_put_alu_res_bus = mc_out[29] && (state == STATE_EXEC);
+    wire mc_alu_add = mc_out[20] && (state == STATE_EXEC); // Done
+    wire mc_alu_add_ov = mc_out[21] && (state == STATE_EXEC); // Done
+    wire mc_alu_sub = mc_out[22] && (state == STATE_EXEC); // Done
+    wire mc_alu_sub_ov = mc_out[23] && (state == STATE_EXEC); // Done
+    wire mc_alu_and = mc_out[24] && (state == STATE_EXEC); // Done
+    wire mc_alu_or = mc_out[25] && (state == STATE_EXEC); // Done
+    wire mc_alu_not = mc_out[26] && (state == STATE_EXEC); // Done
+    wire mc_alu_cmp = mc_out[27] && (state == STATE_EXEC); // Done
+    wire mc_alu_flag_reset = mc_out[28] && (state == STATE_EXEC); // Done
 
-    wire mc_jeq = mc_out[30] && (state == STATE_EXEC);
-    wire mc_jneq = mc_out[31] && (state == STATE_EXEC);
+    wire mc_put_alu_res_bus = mc_out[29] && (state == STATE_EXEC); // Done
+
+    wire mc_jeq = mc_out[30] && (state == STATE_EXEC); // Done
+    wire mc_jneq = mc_out[31] && (state == STATE_EXEC); // Done
     wire mc_hlt = mc_out[32] && (state == STATE_EXEC); // Done
-    wire mc_jmp = mc_out[33] && (state == STATE_EXEC);
+    wire mc_jmp = mc_out[33] && (state == STATE_EXEC); // Done
 
     wire mc_finish = mc_out[63] && (state == STATE_EXEC); // Done
 
@@ -84,22 +85,12 @@ module GoofyCore (
 
 
     // ALU
-    
-    reg [7:0] alu0d;
     wire [7:0] alu0o;
-    reg [7:0] alu1d;
     wire [7:0] alu1o;
     wire alu_flag_ov_o;
     wire alu_flag_eq_o;
     wire alu_flag_hlt_o;
     wire [7:0] alu_out;
-    reg alu_add;
-    reg alu_add_ov;
-    reg alu_sub;
-    reg alu_sub_ov;
-    reg alu_and;
-    reg alu_or;
-    reg alu_not;
     reg alu_cmp;
     reg alu_hlt;
     reg alu_flag_res;
@@ -118,12 +109,12 @@ module GoofyCore (
         .alu_out(alu_out),
 
         .alu_add(mc_alu_add),
-        .alu_add_ov(alu_add_ov),
-        .alu_sub(alu_sub),
-        .alu_sub_ov(alu_sub_ov),
-        .alu_and(alu_and),
-        .alu_or(alu_or),
-        .alu_not(alu_not),
+        .alu_add_ov(mc_alu_add_ov),
+        .alu_sub(mc_alu_sub),
+        .alu_sub_ov(mc_alu_sub_ov),
+        .alu_and(mc_alu_and),
+        .alu_or(mc_alu_or),
+        .alu_not(mc_alu_not),
         .alu_cmp(alu_cmp),
         .alu_hlt(alu_hlt),
         .alu_flag_res(alu_flag_res)
@@ -141,6 +132,8 @@ module GoofyCore (
     reg [7:0] op0;
     reg [7:0] op1;
     wire execute_op;
+
+    assign op_mixed = {op0, op1};
 
     localparam STATE_FETCH_IOP = 0;
     localparam STATE_FETCH_OP0 = 1;
@@ -180,13 +173,6 @@ module GoofyCore (
             regs[14] <= 0;
             regs[15] <= 0;
 
-            alu_add <= 0;
-            alu_add_ov <= 0;
-            alu_sub <= 0;
-            alu_sub_ov <= 0;
-            alu_and <= 0;
-            alu_or <= 0;
-            alu_not <= 0;
             alu_cmp <= 0;
             alu_hlt <= 0;
             alu_flag_res <= 0;
@@ -225,14 +211,42 @@ module GoofyCore (
 
                     if (mc_alu_add) begin
                         $display("MC> ALU ADD");
-                        alu_add <= 1;
-                        alu0d <= data_bus;
                     end
 
                     if (mc_alu_add_ov) begin
                         $display("MC> ALU ADD OV");
-                        alu_add_ov <= 1;
-                        alu0d <= data_bus;
+                    end
+
+                    if (mc_alu_sub) begin
+                        $display("MC> ALU SUB");
+                    end
+
+                    if (mc_alu_sub_ov) begin
+                        $display("MC> ALU SUB OV");
+                    end
+
+                    if (mc_alu_and) begin
+                        $display("MC> ALU AND");
+                    end
+
+                    if (mc_alu_or) begin
+                        $display("MC> ALU OR");
+                    end
+
+                    if (mc_alu_not) begin
+                        $display("MC> ALU NOT");
+                    end
+
+                    if (mc_alu_cmp) begin
+                        $display("MC> ALU CMP");
+                        alu_cmp <= 1;
+                    end
+
+                
+
+                    if (mc_alu_flag_reset) begin
+                        $display("MC> ALU FLAG RESET");
+                        alu_flag_res <= 1;
                     end
 
                     if (mc_put_reg_iop0_lo_bus) begin
@@ -326,6 +340,45 @@ module GoofyCore (
                         regs[op0[7:4]] <= data_bus;
                     end
 
+                    if (mc_str_reg_0_bus) begin
+                        $display("MC> STR REG 0 (%h)", data_bus);
+                        regs[0] <= data_bus;
+                    end
+
+                    if (mc_str_reg_1_bus) begin
+                        $display("MC> STR REG 1 (%h)", data_bus);
+                        regs[1] <= data_bus;
+                    end
+
+                    if (mc_str_reg_2_bus) begin
+                        $display("MC> STR REG 2 (%h)", data_bus);
+                        regs[2] <= data_bus;
+                    end
+
+                    if (mc_str_reg_3_bus) begin
+                        $display("MC> STR REG 3 (%h)", data_bus);
+                        regs[3] <= data_bus;
+                    end
+
+
+                    if (mc_jeq) begin
+                        $display("MC> JEQ %h", );
+                        if (alu_flag_eq_o) begin
+                            rip <= op_mixed;
+                        end
+                    end
+
+                    if (mc_jneq) begin
+                        $display("MC> JNEQ %h", );
+                        if (!alu_flag_eq_o) begin
+                            rip <= op_mixed;
+                        end
+                    end
+
+                    if (mc_jmp) begin
+                        $display("MC> JMP %h", );
+                        rip <= op_mixed;
+                    end
 
 
 
