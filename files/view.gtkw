@@ -1,0 +1,49 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue Apr  2 02:15:58 2024
+[*]
+[dumpfile] "/home/masl/verilog/goofy-cpu/dump.lxt"
+[dumpfile_mtime] "Tue Apr  2 02:08:21 2024"
+[dumpfile_size] 5676
+[savefile] "/home/masl/verilog/goofy-cpu/files/view.gtkw"
+[timestart] 948
+[size] 1528 836
+[pos] -1 -1
+*-5.000000 1019 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] GoofySim.
+[treeopen] GoofySim.core.
+[sst_width] 233
+[signals_width] 230
+[sst_expanded] 1
+[sst_vpaned_height] 226
+@28
+GoofySim.core.clk[0]
+GoofySim.core.state[1:0]
+@22
+GoofySim.core.mc_counter[15:0]
+GoofySim.core.mc_addr[11:0]
+GoofySim.core.mc_out[63:0]
+GoofySim.core.data_bus[7:0]
+@28
+GoofySim.core.mc_put_reg_iop0_hi_bus[0]
+GoofySim.core.mc_str_alu_reg_0_bus[0]
+GoofySim.core.mc_put_val_iop1_bus[0]
+GoofySim.core.mc_str_alu_reg_1_bus[0]
+@22
+GoofySim.core.alu0o[7:0]
+GoofySim.core.alu1o[7:0]
+@28
+GoofySim.core.mc_alu_add[0]
+@22
+GoofySim.core.alu_out[7:0]
+@28
+GoofySim.core.mc_put_alu_res_bus[0]
+GoofySim.core.mc_str_reg_iop0_hi_bus[0]
+GoofySim.core.mc_alu_cmp[0]
+GoofySim.core.alu_flag_eq_o[0]
+GoofySim.core.mc_jneq[0]
+GoofySim.core.mc_hlt[0]
+@29
+GoofySim.core.alu_hlt[0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -6,4 +6,4 @@ xxd -p -c 8 files/microcode.bin > files/microcode.hex
 iverilog -o ./res/sim -DMICROCODE=\"./files/microcode.hex\" -DRAM=\"./files/inc_hlt.hex\" src/*.v sim.v
 vvp ./res/sim -lxt2
 read -p "Press enter to continue"
-gtkwave dump.lxt
+gtkwave --save ./files/view.gtkw dump.lxt
