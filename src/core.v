@@ -6,10 +6,10 @@ module GoofyCore (
 );
 
     // RAM
-    wire ram_save;
+    reg ram_save;
     reg [7:0] ram_in;
     wire [7:0] ram_out;
-    reg [15:0] ram_addr;
+    wire [15:0] ram_addr;
     GoofyRam ram (
         clk,
         ram_save,
@@ -147,6 +147,12 @@ module GoofyCore (
 
     assign hlt = alu_flag_hlt_o;
 
+    assign ram_addr = (state == STATE_EXEC) ? 
+    (
+        (mc_io_read_bus_a | mc_ram_write_bus_a) * ({regs[0], regs[1]}) |
+        (mc_io_read_bus_b | mc_ram_write_bus_b) * ({regs[2], regs[3]})
+    ) : rip;
+
 
     // First
     always @(negedge clk) begin
@@ -181,20 +187,20 @@ module GoofyCore (
             case (state)
                 STATE_FETCH_IOP:
                 begin
-                    ram_addr <= rip;
+                    //ram_addr <= rip;
                     mc_counter <= 0;
-                    rip <= rip + 1;
+                    //rip <= rip + 1;
                 end
 
                 STATE_FETCH_OP0:
                 begin
-                    ram_addr <= rip;
+                    //ram_addr <= rip;
                     rip <= rip + 1;
                 end
 
                 STATE_FETCH_OP1:
                 begin
-                    ram_addr <= rip;
+                    //ram_addr <= rip;
                     rip <= rip + 1;
 
                     mc_addr <= {iop, mc_counter[3:0]};
@@ -208,6 +214,9 @@ module GoofyCore (
                 begin
                     $display("MC W STEP %h", mc_counter);
 
+                    if (mc_counter == 1) begin
+                        rip <= rip + 1;
+                    end
 
                     if (mc_alu_add) begin
                         $display("MC> ALU ADD");
@@ -242,6 +251,9 @@ module GoofyCore (
                         alu_cmp <= 1;
                     end
 
+                    
+
+
                 
 
                     if (mc_alu_flag_reset) begin
@@ -274,6 +286,15 @@ module GoofyCore (
                         data_bus <= alu_out;
                     end
 
+                    if (mc_ram_read_bus_a) begin
+                        $display("MC> RAM READ BUS A");
+                        //ram_addr <= {regs[0], regs[1]};
+                    end
+
+                    if (mc_ram_read_bus_b) begin
+                        $display("MC> RAM READ BUS B");
+                        //ram_addr <= {regs[2], regs[3]};
+                    end
 
 
                 end
@@ -381,7 +402,19 @@ module GoofyCore (
                     end
 
 
+                    if (mc_ram_write_bus_a) begin
+                        $display("MC> RAM WRITE BUS A");
+                        ram_save <= 1;
+                        ram_in <= data_bus;
+                        //ram_addr <= {regs[0], regs[1]};
+                    end
 
+                    if (mc_ram_write_bus_b) begin
+                        $display("MC> RAM WRITE BUS B []");
+                        ram_save <= 1;
+                        ram_in <= data_bus;
+                        //ram_addr <= {regs[2], regs[3]};
+                    end
 
 
                     mc_addr <= {iop, mc_counter[3:0]};

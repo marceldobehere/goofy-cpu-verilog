@@ -11,7 +11,7 @@ module GoofyRam (
 
 	assign ram_out = memory[ram_addr];
 
-	always @(posedge clk) begin
+	always @(negedge clk) begin
 		if (ram_save) begin
 			memory[ram_addr] <= ram_in;
 		end
