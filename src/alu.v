@@ -63,13 +63,13 @@ module GoofyALU (
     end
 
     assign alu_out = (
-        (alu_add * (alu0 + alu1)) |
-        (alu_add_ov * (alu0 + alu1 + alu_flag_ov)) |
-        (alu_sub * (alu0 - alu1)) |
-        (alu_sub_ov * (alu0 - alu1 - alu_flag_ov)) |
-        (alu_and * (alu0 & alu1)) |
-        (alu_or * (alu0 | alu1)) |
-        (alu_not * (~alu0))
+        (alu_add ? (alu0 + alu1) : 0) |
+        (alu_add_ov ? (alu0 + alu1 + alu_flag_ov) : 0) |
+        (alu_sub ? (alu0 - alu1) : 0) |
+        (alu_sub_ov ? (alu0 - alu1 - alu_flag_ov) : 0) |
+        (alu_and ? (alu0 & alu1) : 0) |
+        (alu_or ? (alu0 | alu1) : 0) |
+        (alu_not ? (~alu0) : 0)
     );
 
     always @(negedge clk) begin

@@ -149,8 +149,8 @@ module GoofyCore (
 
     assign ram_addr = (state == STATE_EXEC) ? 
     (
-        (mc_io_read_bus_a | mc_ram_write_bus_a) * ({regs[0], regs[1]}) |
-        (mc_io_read_bus_b | mc_ram_write_bus_b) * ({regs[2], regs[3]})
+        ((mc_io_read_bus_a | mc_ram_write_bus_a) ? ({regs[0], regs[1]}) : 0) |
+        ((mc_io_read_bus_b | mc_ram_write_bus_b) ? ({regs[2], regs[3]}) : 0)
     ) : rip;
 
 
