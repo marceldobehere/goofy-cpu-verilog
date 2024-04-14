@@ -162,7 +162,7 @@ module GoofyCore (
             mc_counter <= 0;
             mc_addr <= 0;
 
-            regs[0] <= 10;
+            regs[0] <= 0;
             regs[1] <= 0;
             regs[2] <= 0;
             regs[3] <= 0;
